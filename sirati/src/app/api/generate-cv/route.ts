@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerSupabase } from '@/lib/supabase';
+import { createServerSupabase } from '@/lib/supabase-server';
 import { generateCV } from '@/lib/anthropic';
 
 export async function POST(req: NextRequest) {
   try {
     const supabase = await createServerSupabase();
 
-    // Auth check
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -19,7 +18,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'jobTitle and jobDescription are required' }, { status: 400 });
     }
 
-    // Fetch user data in parallel
     const [profileRes, experienceRes, educationRes, skillsRes, languagesRes, certsRes] = await Promise.all([
       supabase.from('profiles').select('*').eq('user_id', user.id).single(),
       supabase.from('work_experience').select('*').eq('user_id', user.id).order('sort_order'),
@@ -29,7 +27,6 @@ export async function POST(req: NextRequest) {
       supabase.from('certifications').select('*').eq('user_id', user.id),
     ]);
 
-    // Generate CV with Claude
     const result = await generateCV({
       jobTitle,
       jobDescription,
@@ -44,7 +41,6 @@ export async function POST(req: NextRequest) {
       userEmail: user.email!,
     });
 
-    // Save to database
     const { data: savedCV, error: saveError } = await supabase
       .from('generated_cvs')
       .insert({
@@ -62,7 +58,6 @@ export async function POST(req: NextRequest) {
 
     if (saveError) {
       console.error('Save error:', saveError);
-      // Return result even if save fails
     }
 
     return NextResponse.json({
