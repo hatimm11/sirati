@@ -1,0 +1,40 @@
+{
+  "name": "sirati",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@anthropic-ai/sdk": "^0.32.1",
+    "@supabase/supabase-js": "^2.45.4",
+    "@supabase/ssr": "^0.5.1",
+    "next-intl": "^3.22.3",
+    "@react-pdf/renderer": "^3.4.4",
+    "react-hook-form": "^7.53.2",
+    "zod": "^3.23.8",
+    "@hookform/resolvers": "^3.9.1",
+    "lucide-react": "^0.460.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.4",
+    "framer-motion": "^11.11.17",
+    "sonner": "^1.7.0",
+    "date-fns": "^4.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "eslint": "^8",
+    "eslint-config-next": "15.1.0"
+  }
+}
