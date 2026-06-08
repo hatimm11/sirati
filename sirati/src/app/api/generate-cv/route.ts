@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       cv: result,
-      id: savedCV?.id,
+      id: (savedCV as any)?.id,
     });
   } catch (error) {
     console.error('Generate CV error:', error);
