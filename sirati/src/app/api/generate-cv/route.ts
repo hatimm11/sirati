@@ -49,18 +49,21 @@ export async function POST(req: NextRequest) {
       userEmail: user.email!,
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const insertData: any = {
+      user_id: user.id,
+      job_title: jobTitle,
+      job_description: jobDescription,
+      language: language || 'ar',
+      tone: tone || 'formal',
+      content_json: result,
+      match_score: result.matchScore,
+      template_id: 'modern-01',
+    };
+
     const { data: savedCV, error: saveError } = await supabase
       .from('generated_cvs')
-      .insert({
-        user_id: user.id,
-        job_title: jobTitle,
-        job_description: jobDescription,
-        language: language || 'ar',
-        tone: tone || 'formal',
-        content_json: result,
-        match_score: result.matchScore,
-        template_id: 'modern-01',
-      })
+      .insert(insertData)
       .select()
       .single();
 
