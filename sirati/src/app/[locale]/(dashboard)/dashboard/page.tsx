@@ -3,21 +3,23 @@
 import { useEffect, useState } from 'react';
 import { useLocale } from 'next-intl';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase';
 
 export default function DashboardPage() {
   const locale = useLocale();
   const isRTL = locale === 'ar';
-  const supabase = createClient();
   const [user, setUser] = useState<any>(null);
   const [stats, setStats] = useState({ total: 0, lastScore: 0 });
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     async function load() {
+      const { createClient } = await import('@/lib/supabase');
+      const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
       if (user) {
-        const { data } = await supabase
+        const { data } = await (supabase as any)
           .from('generated_cvs')
           .select('match_score')
           .eq('user_id', user.id)
@@ -27,6 +29,8 @@ export default function DashboardPage() {
     }
     load();
   }, []);
+
+  if (!mounted) return <div style={{ minHeight: '100vh', background: '#f5f5f7' }} />;
 
   const p = (path: string) => isRTL ? path : `/en${path}`;
 
