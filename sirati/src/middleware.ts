@@ -1,17 +1,16 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
 
 const intlMiddleware = createMiddleware({
   locales: ['ar', 'en'],
   defaultLocale: 'ar',
-  localePrefix: 'as-needed', // ar is default (no prefix), en gets /en
+  localePrefix: 'as-needed',
 });
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip API and static files
   if (
     pathname.startsWith('/api') ||
     pathname.startsWith('/_next') ||
@@ -20,7 +19,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Supabase auth check for protected routes
   const protectedPaths = ['/dashboard', '/profile', '/generate', '/history'];
   const locale = pathname.startsWith('/en') ? 'en' : 'ar';
   const pathWithoutLocale = pathname.replace(/^\/(en|ar)/, '') || '/';
@@ -38,7 +36,7 @@ export async function middleware(request: NextRequest) {
       {
         cookies: {
           getAll: () => request.cookies.getAll(),
-          setAll: (cookiesToSet) => {
+          setAll: (cookiesToSet: { name: string; value: string; options: CookieOptions }[]) => {
             cookiesToSet.forEach(({ name, value, options }) =>
               response.cookies.set(name, value, options)
             );
