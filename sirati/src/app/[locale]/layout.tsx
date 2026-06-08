@@ -13,29 +13,19 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-
   if (!locales.includes(locale)) notFound();
-
   const messages = await getMessages();
-  const dir = locale === 'ar' ? 'rtl' : 'ltr';
 
   return (
-    <html lang={locale} dir={dir}>
-      <body>
-        <NextIntlClientProvider messages={messages}>
-          {children}
-          <Toaster
-            position={locale === 'ar' ? 'bottom-right' : 'bottom-left'}
-            toastOptions={{
-              style: {
-                fontFamily: 'IBM Plex Sans Arabic, system-ui, sans-serif',
-                borderRadius: '14px',
-              },
-            }}
-          />
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <NextIntlClientProvider messages={messages}>
+      <div dir={locale === 'ar' ? 'rtl' : 'ltr'} style={{ minHeight: '100vh' }}>
+        {children}
+        <Toaster
+          position={locale === 'ar' ? 'bottom-right' : 'bottom-left'}
+          toastOptions={{ style: { fontFamily: 'IBM Plex Sans Arabic, system-ui, sans-serif', borderRadius: '14px' } }}
+        />
+      </div>
+    </NextIntlClientProvider>
   );
 }
 
