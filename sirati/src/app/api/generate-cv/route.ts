@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabase } from '@/lib/supabase-server';
 import { generateCV } from '@/lib/anthropic';
+import type { UserProfile } from '@/lib/anthropic';
 
 export async function POST(req: NextRequest) {
   try {
@@ -27,12 +28,19 @@ export async function POST(req: NextRequest) {
       supabase.from('certifications').select('*').eq('user_id', user.id),
     ]);
 
+    const emptyProfile: UserProfile = {
+      name_ar: null, name_en: null, phone: null,
+      title_ar: null, title_en: null, city: null,
+      country: null, linkedin: null, portfolio_url: null,
+      summary_ar: null, summary_en: null,
+    };
+
     const result = await generateCV({
       jobTitle,
       jobDescription,
       language: language || 'ar',
       tone: tone || 'formal',
-      profile: profileRes.data || {},
+      profile: profileRes.data ?? emptyProfile,
       workExperience: experienceRes.data || [],
       education: educationRes.data || [],
       skills: skillsRes.data || [],
