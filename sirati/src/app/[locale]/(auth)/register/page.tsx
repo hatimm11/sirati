@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -11,14 +11,38 @@ export default function RegisterPage() {
   const t = useTranslations('auth');
   const locale = useLocale();
   const router = useRouter();
-  const supabase = createClient();
-  const isRTL = locale === 'ar';
-
+  const [mounted, setMounted] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => { setMounted(true); }, []);
+
+  if (!mounted) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f5f7', padding: '24px' }}>
+        <div style={{ width: '100%', maxWidth: 420, background: '#fff', borderRadius: 24, padding: '48px 40px', boxShadow: '0 4px 40px rgba(0,0,0,0.08)' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
+            <div style={{ width: 50, height: 50, borderRadius: 15, background: 'linear-gradient(135deg, #0071e3, #2997ff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, fontWeight: 700, color: '#fff' }}>س</div>
+          </div>
+          <div style={{ height: 32, width: 180, background: '#f0f0f0', borderRadius: 8, margin: '0 auto 10px' }} />
+          <div style={{ height: 18, width: 240, background: '#f5f5f5', borderRadius: 6, margin: '0 auto 36px' }} />
+          <div style={{ height: 48, borderRadius: 12, background: '#f5f5f5', marginBottom: 24 }} />
+          <div style={{ height: 1, background: 'rgba(0,0,0,0.08)', marginBottom: 24 }} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ height: 44, borderRadius: 12, background: '#f5f5f5' }} />
+            <div style={{ height: 44, borderRadius: 12, background: '#f5f5f5' }} />
+            <div style={{ height: 44, borderRadius: 12, background: '#f5f5f5' }} />
+            <div style={{ height: 48, borderRadius: 12, background: '#0071e3', marginTop: 4 }} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const isRTL = locale === 'ar';
+  const supabase = createClient();
   const loginPath = isRTL ? '/ar/login' : '/en/login';
 
   async function handleRegister(e: React.FormEvent) {
@@ -40,9 +64,7 @@ export default function RegisterPage() {
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success(isRTL
-        ? 'تم إنشاء الحساب! تحقق من بريدك الإلكتروني'
-        : 'Account created! Check your email');
+      toast.success(isRTL ? 'تم إنشاء الحساب! تحقق من بريدك الإلكتروني' : 'Account created! Check your email');
     }
   }
 
@@ -57,7 +79,6 @@ export default function RegisterPage() {
     width: '100%', padding: '12px 16px', borderRadius: 12,
     border: '1.5px solid rgba(0,0,0,0.1)',
     background: '#f5f5f7', fontSize: 15, outline: 'none',
-    transition: 'border-color 0.2s, background 0.2s',
     fontFamily: 'inherit', boxSizing: 'border-box',
   };
 
@@ -73,7 +94,6 @@ export default function RegisterPage() {
         padding: '48px 40px',
         boxShadow: '0 4px 40px rgba(0,0,0,0.08)',
       }}>
-        {/* Logo */}
         <Link href={isRTL ? '/' : '/en'} style={{ textDecoration: 'none', display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
           <div style={{
             width: 50, height: 50, borderRadius: 15,
@@ -90,15 +110,13 @@ export default function RegisterPage() {
           {t('register_subtitle')}
         </p>
 
-        {/* Google */}
         <button onClick={handleGoogle} style={{
           width: '100%', padding: '14px', borderRadius: 12,
           border: '1px solid rgba(0,0,0,0.1)',
           background: '#fff', cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
           fontSize: 15, fontWeight: 500, color: '#1d1d1f',
-          marginBottom: 24, transition: 'background 0.2s',
-          fontFamily: 'inherit',
+          marginBottom: 24, fontFamily: 'inherit',
         }}>
           <svg width="20" height="20" viewBox="0 0 48 48">
             <path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 2.9l5.7-5.7C34.5 6.5 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z" />
@@ -120,44 +138,19 @@ export default function RegisterPage() {
             <label style={{ fontSize: 14, fontWeight: 500, color: '#1d1d1f', display: 'block', marginBottom: 8 }}>
               {t('name')}
             </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              style={inputStyle}
-              onFocus={(e) => { e.currentTarget.style.borderColor = '#0071e3'; e.currentTarget.style.background = '#fff'; }}
-              onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)'; e.currentTarget.style.background = '#f5f5f7'; }}
-            />
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)} required style={inputStyle} />
           </div>
           <div>
             <label style={{ fontSize: 14, fontWeight: 500, color: '#1d1d1f', display: 'block', marginBottom: 8 }}>
               {t('email')}
             </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              style={{ ...inputStyle, direction: 'ltr', textAlign: 'left' }}
-              onFocus={(e) => { e.currentTarget.style.borderColor = '#0071e3'; e.currentTarget.style.background = '#fff'; }}
-              onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)'; e.currentTarget.style.background = '#f5f5f7'; }}
-            />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required style={{ ...inputStyle, direction: 'ltr', textAlign: 'left' }} />
           </div>
           <div>
             <label style={{ fontSize: 14, fontWeight: 500, color: '#1d1d1f', display: 'block', marginBottom: 8 }}>
               {t('password')}
             </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={8}
-              style={{ ...inputStyle, direction: 'ltr', textAlign: 'left' }}
-              onFocus={(e) => { e.currentTarget.style.borderColor = '#0071e3'; e.currentTarget.style.background = '#fff'; }}
-              onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)'; e.currentTarget.style.background = '#f5f5f7'; }}
-            />
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} style={{ ...inputStyle, direction: 'ltr', textAlign: 'left' }} />
             <p style={{ fontSize: 12, color: '#86868b', marginTop: 6 }}>
               {isRTL ? '٨ أحرف على الأقل' : 'Minimum 8 characters'}
             </p>
@@ -170,7 +163,7 @@ export default function RegisterPage() {
               width: '100%', padding: '14px', borderRadius: 12,
               background: loading ? '#86868b' : '#0071e3',
               color: '#fff', border: 'none', cursor: loading ? 'not-allowed' : 'pointer',
-              fontSize: 16, fontWeight: 600, transition: 'background 0.2s',
+              fontSize: 16, fontWeight: 600,
               fontFamily: 'inherit', marginTop: 4,
             }}
           >
