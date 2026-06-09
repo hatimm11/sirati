@@ -8,11 +8,11 @@ import { createClient } from '@/lib/supabase';
 export default function DashboardPage() {
   const locale = useLocale();
   const isRTL = locale === 'ar';
-  const supabase = createClient();
   const [user, setUser] = useState<any>(null);
   const [stats, setStats] = useState({ total: 0, lastScore: 0 });
 
   useEffect(() => {
+    const supabase = createClient();
     async function load() {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
