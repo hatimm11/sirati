@@ -22,10 +22,11 @@ export default function DashboardPage() {
           .select('match_score')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false });
-        if (data) {
+        const rows = data as any[];
+        if (rows) {
           setStats({
-            total: data.length,
-            lastScore: data[0]?.match_score || 0,
+            total: rows.length,
+            lastScore: rows[0]?.match_score || 0,
           });
         }
       }
@@ -37,7 +38,6 @@ export default function DashboardPage() {
 
   return (
     <div style={{ padding: '40px 48px', maxWidth: 900 }}>
-      {/* Header */}
       <div style={{ marginBottom: 40 }}>
         <h1 style={{ fontSize: 28, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>
           {isRTL ? `مرحباً ${user?.user_metadata?.full_name?.split(' ')[0] || ''} 👋` : `Welcome ${user?.user_metadata?.full_name?.split(' ')[0] || ''} 👋`}
@@ -47,7 +47,6 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 40 }}>
         {[
           { label: isRTL ? 'السير المُولَّدة' : 'CVs Generated', value: stats.total, icon: '📄' },
@@ -65,7 +64,6 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* CTA */}
       <div style={{
         background: 'linear-gradient(135deg, #0071e3, #2997ff)',
         borderRadius: 20, padding: '36px 40px',
@@ -91,7 +89,6 @@ export default function DashboardPage() {
         </Link>
       </div>
 
-      {/* Quick links */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, marginTop: 24 }}>
         {[
           { href: p('/profile'), icon: '👤', title: isRTL ? 'ملفي الشخصي' : 'My Profile', desc: isRTL ? 'أضف بياناتك وخبراتك' : 'Add your info and experience' },
