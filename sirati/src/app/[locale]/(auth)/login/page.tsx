@@ -44,7 +44,7 @@ export default function LoginPage() {
   const dashPath = isRTL ? '/ar/dashboard' : '/en/dashboard';
   const registerPath = isRTL ? '/ar/register' : '/en/register';
 
-  async function handleLogin(e) {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -94,7 +94,7 @@ export default function LoginPage() {
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required style={{ width: '100%', padding: '12px 16px', borderRadius: 12, border: '1.5px solid rgba(0,0,0,0.1)', background: '#f5f5f7', fontSize: 15, outline: 'none', fontFamily: 'inherit', direction: 'ltr', textAlign: 'left', boxSizing: 'border-box' }} />
           </div>
           <button type="submit" disabled={loading} style={{ width: '100%', padding: '14px', borderRadius: 12, background: loading ? '#86868b' : '#0071e3', color: '#fff', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', fontSize: 16, fontWeight: 600, fontFamily: 'inherit', marginTop: 4 }}>
-            {loading ? (isRTL ? 'جارٍ الدخول...' : 'Signing in...') : t('login_btn')}
+            {loading ? (isRTL ? 'جارِ الدخول...' : 'Signing in...') : t('login_btn')}
           </button>
         </form>
         <p style={{ fontSize: 14, color: '#6e6e73', textAlign: 'center', marginTop: 28 }}>
