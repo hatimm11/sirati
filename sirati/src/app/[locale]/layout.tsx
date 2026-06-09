@@ -17,11 +17,10 @@ export default async function LocaleLayout({
   if (!locales.includes(locale)) notFound();
 
   const messages = await getMessages();
-  const dir = locale === 'ar' ? 'rtl' : 'ltr';
 
   return (
-    <NextIntlClientProvider messages={messages}>
-      <div dir={dir} style={{ minHeight: '100vh' }}>
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      <div dir={locale === 'ar' ? 'rtl' : 'ltr'} style={{ minHeight: '100vh' }}>
         {children}
         <Toaster
           position={locale === 'ar' ? 'bottom-right' : 'bottom-left'}
