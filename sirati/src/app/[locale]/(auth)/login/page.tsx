@@ -18,8 +18,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const dashPath = isRTL ? '/dashboard' : '/en/dashboard';
-  const registerPath = isRTL ? '/register' : '/en/register';
+  const dashPath = isRTL ? '/ar/dashboard' : '/en/dashboard';
+  const registerPath = isRTL ? '/ar/register' : '/en/register';
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -54,7 +54,7 @@ export default function LoginPage() {
         boxShadow: '0 4px 40px rgba(0,0,0,0.08)',
       }}>
         {/* Logo */}
-        <Link href={isRTL ? '/' : '/en'} style={{ textDecoration: 'none', display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
+        <Link href={isRTL ? '/ar' : '/en'} style={{ textDecoration: 'none', display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
           <div style={{
             width: 50, height: 50, borderRadius: 15,
             background: 'linear-gradient(135deg, #0071e3, #2997ff)',
@@ -120,14 +120,8 @@ export default function LoginPage() {
                 fontFamily: 'inherit', direction: 'ltr', textAlign: 'left',
                 boxSizing: 'border-box',
               }}
-              onFocus={(e) => {
-                e.currentTarget.style.borderColor = '#0071e3';
-                e.currentTarget.style.background = '#fff';
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)';
-                e.currentTarget.style.background = '#f5f5f7';
-              }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = '#0071e3'; e.currentTarget.style.background = '#fff'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)'; e.currentTarget.style.background = '#f5f5f7'; }}
             />
           </div>
 
@@ -136,7 +130,7 @@ export default function LoginPage() {
               <label style={{ fontSize: 14, fontWeight: 500, color: '#1d1d1f' }}>
                 {t('password')}
               </label>
-              <Link href={isRTL ? '/forgot-password' : '/en/forgot-password'}
+              <Link href={isRTL ? '/ar/forgot-password' : '/en/forgot-password'}
                 style={{ fontSize: 13, color: '#0071e3', textDecoration: 'none' }}>
                 {t('forgot_password')}
               </Link>
@@ -154,14 +148,8 @@ export default function LoginPage() {
                 fontFamily: 'inherit', direction: 'ltr', textAlign: 'left',
                 boxSizing: 'border-box',
               }}
-              onFocus={(e) => {
-                e.currentTarget.style.borderColor = '#0071e3';
-                e.currentTarget.style.background = '#fff';
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)';
-                e.currentTarget.style.background = '#f5f5f7';
-              }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = '#0071e3'; e.currentTarget.style.background = '#fff'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)'; e.currentTarget.style.background = '#f5f5f7'; }}
             />
           </div>
 
