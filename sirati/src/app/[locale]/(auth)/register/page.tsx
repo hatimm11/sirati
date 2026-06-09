@@ -19,7 +19,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const loginPath = isRTL ? '/login' : '/en/login';
+  const loginPath = isRTL ? '/ar/login' : '/en/login';
 
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
