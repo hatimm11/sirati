@@ -1,11 +1,11 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { createServerClient } from '@supabase/ssr';
 
 const intlMiddleware = createMiddleware({
   locales: ['ar', 'en'],
   defaultLocale: 'ar',
-  localePrefix: 'as-needed',
+  localePrefix: 'always',
 });
 
 export async function middleware(request: NextRequest) {
@@ -21,7 +21,7 @@ export async function middleware(request: NextRequest) {
 
   const protectedPaths = ['/dashboard', '/profile', '/generate', '/history'];
   const locale = pathname.startsWith('/en') ? 'en' : 'ar';
-  const pathWithoutLocale = pathname.replace(/^\/(en|ar)/, '') || '/';
+  const pathWithoutLocale = pathname.replace(/^\/(en|ar)\//, '/').replace(/^\/(en|ar)$/, '/') || '/';
 
   const isProtected = protectedPaths.some((p) =>
     pathWithoutLocale.startsWith(p)
@@ -36,7 +36,7 @@ export async function middleware(request: NextRequest) {
       {
         cookies: {
           getAll: () => request.cookies.getAll(),
-          setAll: (cookiesToSet: { name: string; value: string; options: CookieOptions }[]) => {
+          setAll: (cookiesToSet) => {
             cookiesToSet.forEach(({ name, value, options }) =>
               response.cookies.set(name, value, options)
             );
@@ -49,7 +49,7 @@ export async function middleware(request: NextRequest) {
 
     if (!user) {
       const loginUrl = new URL(
-        locale === 'en' ? '/en/login' : '/login',
+        locale === 'en' ? '/en/login' : '/ar/login',
         request.url
       );
       loginUrl.searchParams.set('redirect', pathname);
