@@ -7,11 +7,12 @@ import { createClient } from '@/lib/supabase';
 
 export default function DashboardPage() {
   const locale = useLocale();
-  const isRTL = locale === 'ar';
+  const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [stats, setStats] = useState({ total: 0, lastScore: 0 });
 
   useEffect(() => {
+    setMounted(true);
     const supabase = createClient();
     async function load() {
       const { data: { user } } = await supabase.auth.getUser();
@@ -34,6 +35,27 @@ export default function DashboardPage() {
     load();
   }, []);
 
+  if (!mounted) {
+    return (
+      <div style={{ padding: '40px 48px', maxWidth: 900, minHeight: '100vh' }}>
+        <div style={{ height: 40, width: 280, background: '#f0f0f0', borderRadius: 10, marginBottom: 16 }} />
+        <div style={{ height: 20, width: 220, background: '#f5f5f5', borderRadius: 8, marginBottom: 40 }} />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 40 }}>
+          {[1,2,3].map((i) => (
+            <div key={i} style={{ background: '#fff', borderRadius: 16, padding: '24px 28px', boxShadow: '0 1px 3px rgba(0,0,0,0.06)', height: 120 }} />
+          ))}
+        </div>
+        <div style={{ background: '#f0f0f0', borderRadius: 20, height: 140, marginBottom: 24 }} />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
+          {[1,2].map((i) => (
+            <div key={i} style={{ background: '#fff', borderRadius: 16, height: 110, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const isRTL = locale === 'ar';
   const p = (path: string) => isRTL ? `/ar${path}` : `/en${path}`;
 
   return (
