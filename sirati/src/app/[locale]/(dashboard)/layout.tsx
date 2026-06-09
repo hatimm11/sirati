@@ -30,7 +30,7 @@ function SidebarLink({ href, icon, label, active }: {
 }
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState(true);
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
