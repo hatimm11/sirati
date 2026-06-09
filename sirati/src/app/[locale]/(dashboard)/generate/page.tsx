@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { toast } from 'sonner';
 
@@ -17,7 +17,7 @@ interface CVResult {
 
 export default function GeneratePage() {
   const locale = useLocale();
-  const isRTL = locale === 'ar';
+  const [mounted, setMounted] = useState(false);
   const [jobTitle, setJobTitle] = useState('');
   const [jobDesc, setJobDesc] = useState('');
   const [language, setLanguage] = useState<Lang>('ar');
@@ -26,6 +26,22 @@ export default function GeneratePage() {
   const [result, setResult] = useState<CVResult | null>(null);
   const [activeTab, setActiveTab] = useState<'cv' | 'cover' | 'tips'>('cv');
   const [showLang, setShowLang] = useState<'ar' | 'en'>('ar');
+
+  useEffect(() => { setMounted(true); }, []);
+
+  if (!mounted) {
+    return (
+      <div style={{ padding: '40px', minHeight: '100vh' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ height: 40, width: 260, background: '#f0f0f0', borderRadius: 10, marginBottom: 12 }} />
+          <div style={{ height: 20, width: 380, background: '#f5f5f5', borderRadius: 8, marginBottom: 40 }} />
+          <div style={{ background: '#fff', borderRadius: 20, padding: 32, boxShadow: '0 2px 16px rgba(0,0,0,0.06)', height: 420 }} />
+        </div>
+      </div>
+    );
+  }
+
+  const isRTL = locale === 'ar';
 
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
