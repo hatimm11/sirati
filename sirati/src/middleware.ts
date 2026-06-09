@@ -21,14 +21,15 @@ export async function middleware(request: NextRequest) {
 
   const protectedPaths = ['/dashboard', '/profile', '/generate', '/history'];
   const locale = pathname.startsWith('/en') ? 'en' : 'ar';
-  const pathWithoutLocale = pathname.replace(/^\/(en|ar)\//, '/').replace(/^\/(en|ar)$/, '/') || '/';
-
-  const isProtected = protectedPaths.some((p) =>
-    pathWithoutLocale.startsWith(p)
-  );
+  const pathWithoutLocale =
+    pathname.replace(/^\/(en|ar)\//, '/').replace(/^\/(en|ar)$/, '/') || '/';
+  const isProtected = protectedPaths.some((p) => pathWithoutLocale.startsWith(p));
 
   if (isProtected) {
-    let response = NextResponse.next({ request });
+    const intlResponse = intlMiddleware(request);
+    const response = intlResponse instanceof NextResponse
+      ? intlResponse
+      : NextResponse.next({ request });
 
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -55,6 +56,8 @@ export async function middleware(request: NextRequest) {
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }
+
+    return response;
   }
 
   return intlMiddleware(request);
