@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase';
 
 export default function DashboardPage() {
   const locale = useLocale();
-  const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState(true);
   const [user, setUser] = useState<any>(null);
   const [stats, setStats] = useState({ total: 0, lastScore: 0 });
 
